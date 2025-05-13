@@ -53,17 +53,12 @@ path1_coeffs = fir1(31, 0.5); % Example FIR filter
 noise_in_primary = filter(path1_coeffs, 1, noise_source);
 noise_in_primary = noise_in_primary / max(abs(noise_in_primary)) * max(abs(noise_source)); % Rescale
 
-% --- Control peak of noise_in_primary ---
-max_desired_noise_peak_component = 0.4; % Or 1.0 - target_clean_peak
-if max(abs(noise_in_primary)) > 1e-6 % Avoid division by zero
-    noise_in_primary = noise_in_primary / max(abs(noise_in_primary)) * max_desired_noise_peak_component;
-end
-% ---
+
 
 % Path 2: Noise source to the reference microphone (picks up only noise, ideally)
 % This path will be different from Path 1. The adaptive filter will try to model Path 1 given Path 2.
 %path2_coeffs = fir1(41, 0.45); % e.g., slightly different cutoff, or different order
-path2_coeffs = fir1(41, 0.5)
+path2_coeffs = fir1(41, 0.5);
 %path2_coeffs = fir1(35, 0.6); % Low-pass with a higher cutoff than path1
 
 reference_noise = filter(path2_coeffs, 1, noise_source);
