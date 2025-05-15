@@ -26,7 +26,7 @@ if size(clean_signal, 2) > 1
 end
 
 % --- MODIFICATION FOR HEADROOM ---
-target_clean_peak = 0.5; % e.g., clean signal peaks at +/- 0.5, leaving 0.5 for noise
+target_clean_peak = 0.8; % e.g., clean signal peaks at +/- 0.5, leaving 0.5 for noise
 clean_signal = clean_signal / max(abs(clean_signal)) * target_clean_peak;
 % --- END MODIFICATION ---
 
@@ -41,6 +41,8 @@ disp('2. Generating Noise Source...');
 % This is the original source of the noise (e.g., an engine, a fan)
 noise_power_relative_to_signal = 0.2; % Adjust to make noise more or less prominent
 noise_source = randn(N, 1) * sqrt(noise_power_relative_to_signal * var(clean_signal) / var(randn(N,1)));
+
+
 
 % --- 3. Create Noisy (Primary) and Reference Signals ---
 disp('3. Creating Noisy and Reference Signals...');
@@ -127,7 +129,7 @@ nlms_step_size = 0.05; % A good starting point for NLMS. Try 0.05, 0.2 etc.
 lms_filter = dsp.LMSFilter('Length', filter_length, ...
     'Method', 'Normalized LMS', ... % Key change here!
     'StepSize', nlms_step_size, ...
-    'LeakageFactor',0.999);
+    'LeakageFactor',1);
 
 % Apply the adaptive filter
 % Inputs:
@@ -145,6 +147,8 @@ lms_filter = dsp.LMSFilter('Length', filter_length, ...
 % [estimated_noise, cleaned_signal] = filter(adaptfilt_lms, reference_noise, noisy_signal);
 
 disp('   Adaptive filtering complete.');
+
+
 
 % --- 5. Analyze Results ---
 disp('5. Analyzing Results...');
